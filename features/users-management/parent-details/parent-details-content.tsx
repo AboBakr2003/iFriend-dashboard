@@ -1,47 +1,54 @@
-"use client"
+"use client";
 
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AllKidsTable } from "./components/all-kids-table"
-import { useEffect, useState } from "react"
-import { getParentDetails } from "@/services/queries/users-management/GET/get-parent-details"
-import type { ParentDetailsData } from "@/services/queries/users-management/GET/get-parent-details"
-import IFriendSpinner from "@/components/ifriend-spinner"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AllKidsTable } from "./components/all-kids-table";
+import { useEffect, useState } from "react";
+import { getParentDetails } from "@/services/queries/users-management/get/get-parent-details";
+import type { ParentDetailsData } from "@/services/queries/users-management/get/get-parent-details";
+import IFriendSpinner from "@/components/ifriend-spinner";
 
 export function ParentDetailsContent({ parentId }: { parentId: string }) {
-  const [parent, setParent] = useState<ParentDetailsData | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [parent, setParent] = useState<ParentDetailsData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   // Format: 23 March,2024
   const formatRegistrationDate = (iso: string): string => {
-    const d = new Date(iso)
-    if (Number.isNaN(d.getTime())) return iso
-    const day = d.getDate()
-    const month = d.toLocaleString("en-US", { month: "long" })
-    const year = d.getFullYear()
-    return `${day} ${month},${year}`
-  }
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    const day = d.getDate();
+    const month = d.toLocaleString("en-US", { month: "long" });
+    const year = d.getFullYear();
+    return `${day} ${month},${year}`;
+  };
 
   useEffect(() => {
     const fetchParentDetails = async () => {
       try {
-        setLoading(true)
-        const res = await getParentDetails(parentId)
+        setLoading(true);
+        const res = await getParentDetails(parentId);
         if (res.success) {
-          setParent(res.data ?? null)
-          setError(null)
+          setParent(res.data ?? null);
+          setError(null);
         } else {
-          setError(res.message)
+          setError(res.message);
         }
       } catch {
-        setError("Unexpected error happened")
+        setError("Unexpected error happened");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchParentDetails()
-  }, [parentId])
+    };
+    fetchParentDetails();
+  }, [parentId]);
 
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -118,20 +125,20 @@ export function ParentDetailsContent({ parentId }: { parentId: string }) {
         </>
       )}
     </div>
-  )
+  );
 }
 
 function Detail({
   label,
   children,
 }: {
-  label: string
-  children: React.ReactNode
+  label: string;
+  children: React.ReactNode;
 }) {
   return (
     <div className="grid grid-cols-3 gap-4">
       <span className="text-sm text-natural-text font-medium">{label}</span>
       <span className="text-sm font-semibold col-span-2">{children}</span>
     </div>
-  )
+  );
 }

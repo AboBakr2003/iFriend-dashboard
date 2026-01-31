@@ -5,17 +5,20 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/auth-context";
 import Image from "next/image";
 import { menuItems } from "@/app/(dashboard)/@sidebar/page";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import SignOutIcon from "@/public/sign-out-icon";
-import { getMe } from "@/services/queries/settings/user/GET/get-me";
+import { getMe } from "@/services/queries/settings/user/get/get-me";
 import UserProfileOutlineIcon from "@/public/user-profile-outline-icon";
 
-
 export default function Navbar() {
-  const [userName, setUserName] = useState<string>("")
-  const [userRole, setUserRole] = useState<string>("")
-  const [userAvatar, setUserAvatar] = useState<string | null>(null)
+  const [userName, setUserName] = useState<string>("");
+  const [userRole, setUserRole] = useState<string>("");
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
 
   const pathname = usePathname();
   const pageName = menuItems.find((item) => item.href === pathname)?.name;
@@ -24,17 +27,17 @@ export default function Navbar() {
   useEffect(() => {
     (async () => {
       try {
-        const result = await getMe()
-        const userName = result.data?.user?.name as string
-        const userRole = result.data?.user?.dashboardUserRole?.name as string
-        const userAvatar = result.data?.user?.avatarUrl as string | null
-        setUserName(userName ?? "")
-        setUserRole(userRole ?? "")
-        setUserAvatar(userAvatar ?? null)
+        const result = await getMe();
+        const userName = result.data?.user?.name as string;
+        const userRole = result.data?.user?.dashboardUserRole?.name as string;
+        const userAvatar = result.data?.user?.avatarUrl as string | null;
+        setUserName(userName ?? "");
+        setUserRole(userRole ?? "");
+        setUserAvatar(userAvatar ?? null);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    })()
+    })();
   }, []);
 
   return (
@@ -46,20 +49,23 @@ export default function Navbar() {
 
       {/* Right Section - Bell Icon and User Info */}
       <div className="flex items-center gap-4">
-
         {/* User Profile Section with Popover */}
         <Popover>
           <PopoverTrigger asChild>
             <div className="select-none flex items-center gap-3 cursor-pointer hover:bg-natural group rounded-lg px-3 py-2 transition-all">
               {/* User Avatar */}
               <div className="w-10 h-10 rounded-full  group-hover:border-white group-hover:border-4 flex items-center justify-center overflow-hidden transition-all">
-                {userAvatar ? <Image
-                  src={userAvatar}
-                  alt={userName}
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover"
-                /> : <UserProfileOutlineIcon className="w-10 h-10"/>}
+                {userAvatar ? (
+                  <Image
+                    src={userAvatar}
+                    alt={userName}
+                    width={40}
+                    height={40}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <UserProfileOutlineIcon className="w-10 h-10" />
+                )}
               </div>
 
               {/* User Info */}
