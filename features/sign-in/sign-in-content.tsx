@@ -10,7 +10,7 @@ import EmailIcon from "@/public/email-icon";
 import PasswordIcon from "@/public/password-icon";
 import VisibleIcon from "@/public/visible-icon";
 import UnvisibleIcon from "@/public/unvisible-icon";
-import { signIn } from "@/services/queries/sign-in/sign-in";
+import { signIn } from "@/services/queries/sign-in/POST/sign-in";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/auth-context";
 
@@ -52,7 +52,7 @@ export default function SignInContent() {
       if (result.success && result.accessToken) {
         login(result.accessToken);
       } else {
-        toast(`${result.message} ❌`);
+        toast(`${result.message}❌`);
       }
     } catch (error) {
       toast(`${error} ❌`);
@@ -155,7 +155,7 @@ export default function SignInContent() {
             className="mt-4 h-12 w-full bg-primary-blue text-base font-medium text-white hover:bg-primary-blue-hover"
             onClick={handleSubmit}
           >
-            Sign in
+            Sign In
           </Button>
         </form>
       </div>

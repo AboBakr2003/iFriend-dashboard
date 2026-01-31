@@ -1,18 +1,11 @@
 'use client'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import ArrowDownIcon from "@/public/arrow-down-icon";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { getTopChildren } from "@/services/queries/home/top-children";
-import { topChild } from "@/services/queries/home/top-children";
+import { getTopChildren } from "@/services/queries/home/GET/get-top-children";
+import { topChild } from "@/services/queries/home/GET/get-top-children";
 
 export function TopList() {
   const [topChildren, setTopChildren] = useState<topChild[]>([])
@@ -32,7 +25,7 @@ export function TopList() {
   return (
     <Card className="w-full">
       <CardHeader className="p-4">
-        <CardTitle className="text-lg font-bold text-black">Top List</CardTitle>
+        <CardTitle className="text-lg font-medium text-black">Top List</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <Table>
@@ -62,7 +55,7 @@ export function TopList() {
           <TableBody>
             {topChildren.map((child, index) => (
               <TableRow key={index}>
-                <TableCell className="font-medium flex items-center justify-center">
+                <TableCell className="flex items-center justify-center">
                   {index + 1 === 1 && (
                     <div>
                       <Image src="/top-one-icon.svg" alt="top-one" width={40} height={40} />
@@ -86,9 +79,7 @@ export function TopList() {
                 </TableCell>
                 <TableCell>{child.name}</TableCell>
                 <TableCell>{child.scoreCoins}</TableCell>
-                <TableCell>
-                  {child.phone}
-                </TableCell>
+                <TableCell>{child.phone}</TableCell>
               </TableRow>
             ))}
           </TableBody>

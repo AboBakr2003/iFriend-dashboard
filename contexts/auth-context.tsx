@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import "@/services/interceptors";
+import "@/services/queries/sign-in/interceptors";
 
 /* Store authentication token in local storage */
 export const setAuthToken = (accessToken: string): void => {

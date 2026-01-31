@@ -56,7 +56,7 @@ export function TotalRevenueChart({ justifyDiscount, showTimeFilter }: { justify
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
         <div className="flex flex-col space-y-1 w-full border-b pb-4">
           <div className="flex items-center justify-between w-full mb-0">
-            <CardTitle className="text-base font-medium">
+            <CardTitle className="font-normal text-lg">
               Total Revenues
             </CardTitle>
             {showTimeFilter && (
@@ -79,7 +79,7 @@ export function TotalRevenueChart({ justifyDiscount, showTimeFilter }: { justify
             )}
           </div>
           <div className={`w-full flex items-end gap-4 ${justifyDiscount}`}>
-            <span className="text-2xl font-bold">10,230 EGP</span>
+            <span className="text-3xl font-semibold">10,230 EGP</span>
             <div className="flex items-center gap-1">
               <span className="text-xs font-medium text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-lg">
                 +9.6%
