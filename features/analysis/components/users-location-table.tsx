@@ -9,14 +9,12 @@ import { ArrowRightIcon } from "@/public/arrow-right-icon"
 import ArrowDownIcon from "@/public/arrow-down-icon"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { useEffect, useState } from "react"
-import FilterationUsersLocation from "./filteration-users-location"
-import { getRegionAnalysis } from "@/services/queries/analysis/region-analysis"
-
-type Row = { region: string; country: string; totalUser: number; newUser: number }
+import FilterationUsersLocation from "./users-location-filter"
+import { getRegionAnalysis, RegionAnalysisItem } from "@/services/queries/analysis/get/get-region-analysis"
 
 export function UsersLocationTable() {
   const [currentPage, setCurrentPage] = useState(1)
-  const [rows, setRows] = useState<Row[]>([])
+  const [rows, setRows] = useState<RegionAnalysisItem[]>([])
   const [selectedCountries, setSelectedCountries] = useState<string[]>([])
   const [selectedRegions, setSelectedRegions] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState("")
@@ -35,12 +33,56 @@ export function UsersLocationTable() {
   const startIndex = (currentPage - 1) * itemsPerPage
   const currentData = filteredRows.slice(startIndex, startIndex + itemsPerPage)
 
+  const toggleCountry = (country: string, checked: boolean) => {
+    setCurrentPage(1)
+    setSelectedCountries((prev) => {
+      const next = checked ? [...prev, country] : prev.filter((c) => c !== country)
+      // After updating countries, recompute allowed regions and prune selectedRegions
+      // If no countries are selected, clear region filters entirely
+      const allowedRegions = next.length === 0
+        ? []
+        : Array.from(
+            new Set(
+              rows
+                .filter((r) => next.includes(r.country))
+                .map((r) => r.region)
+              )
+            )
+      setSelectedRegions((old) => old.filter((rg) => allowedRegions.includes(rg)))
+      return next
+    })
+  }
+
+  const toggleRegion = (region: string, checked: boolean) => {
+    setCurrentPage(1)
+    setSelectedRegions((prev) =>
+      checked ? [...prev, region] : prev.filter((r) => r !== region)
+    )
+  }
+  
+  // Pagination is purely local based on fetched rows length
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+  
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+  
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
   useEffect(() => {
     (async () => {
       try {
         const res = await getRegionAnalysis()
         if (res.success && res.data) {
-          const mapped: Row[] = res.data.data.map(item => ({
+          const mapped: RegionAnalysisItem[] = res.data.data.map(item => ({
             region: item.region,
             country: item.country,
             totalUser: item.totalUser,
@@ -53,47 +95,6 @@ export function UsersLocationTable() {
       }
     })()
   }, [])
-
-  const toggleCountry = (country: string, checked: boolean) => {
-    setCurrentPage(1)
-    setSelectedCountries((prev) => {
-      const next = checked ? [...prev, country] : prev.filter((c) => c !== country)
-      // After updating countries, recompute allowed regions and prune selectedRegions
-      const allowedRegions = Array.from(
-        new Set(
-          rows
-            .filter((r) => next.length === 0 || next.includes(r.country))
-            .map((r) => r.region)
-        )
-      )
-      setSelectedRegions((old) => old.filter((rg) => allowedRegions.includes(rg)))
-      return next
-    })
-  }
-
-  const toggleRegion = (region: string, checked: boolean) => {
-    setCurrentPage(1)
-    setSelectedRegions((prev) =>
-      checked ? [...prev, region] : prev.filter((r) => r !== region)
-    )
-  }
-
-  // Pagination is purely local based on fetched rows length
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
-
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1)
-    }
-  }
-
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1)
-    }
-  }
 
   return (
     <div>

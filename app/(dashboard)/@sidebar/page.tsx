@@ -65,7 +65,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed top-0 left-0 w-76 h-screen bg-dark-blue flex flex-col p-2 z-[100]">
+    <aside className="fixed top-0 left-0 w-76 h-screen bg-dark-blue flex flex-col p-2 z-100">
       {/* Logo */}
       <div className="flex items-center justify-center p-4">
         <Image
@@ -81,7 +81,7 @@ export default function Sidebar() {
       <nav className="flex-1 overflow-y-auto custom-scrollbar">
         <ul className="list-none mr-2 2xl:mr-0 p-0">
           {menuItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(`${item.href}/`));
 
             return (
               <li key={item.name} className="my-1">

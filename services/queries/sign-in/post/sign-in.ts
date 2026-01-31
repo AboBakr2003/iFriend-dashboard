@@ -11,7 +11,7 @@ export const signIn = async (email: string, password: string) => {
 
     return {
       success: true,
-      message: res?.data?.message ?? "Login successful",
+      message: res?.data?.message ?? "Login successfully",
       accessToken: accessToken,
     };
   } catch (err: unknown) {
@@ -20,7 +20,7 @@ export const signIn = async (email: string, password: string) => {
     const data = error?.response?.data ?? {};
     return {
       success: false,
-      message: data?.message ?? status === 401 ? "Invalid email or password" : "Login failed",
+      message: status === 500 ? "Internal Server Error 🛢️" : `${data?.message} `,
     };
   }
 };

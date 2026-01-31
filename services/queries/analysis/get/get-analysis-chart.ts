@@ -16,7 +16,7 @@ export type UserAnalysisChart = {
 
 export type AnalysisPeriod = "weekly" | "monthly" | "yearly";
 
-export const getUserAnalysisChart = async (period?: AnalysisPeriod) => {
+export const getAnalysisChart = async (period?: AnalysisPeriod) => {
   try {
     const res = await api.get("/analysis/user-analysis-chart", {
       params: period ? { period } : undefined,

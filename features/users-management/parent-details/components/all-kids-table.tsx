@@ -19,9 +19,10 @@ import { usePathname } from "next/navigation"
 
 import Link from "next/link"
 
-import { kids } from "@/features/users-management/data/mock-kids"
+import type { ParentChildrenData } from "@/services/queries/users-management/get/get-parent-details"
 
-export function AllKidsTable() {
+export function AllKidsTable({ kids }: { kids: ParentChildrenData[] }) {
+  
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
@@ -52,7 +53,7 @@ export function AllKidsTable() {
     <div>
       <Card className="rounded-xl border shadow-sm">
         <CardHeader className="border-b p-4">
-          <CardTitle className="text-black text-lg font-semibold">All Kids</CardTitle>
+          <CardTitle className="text-black text-lg font-medium">All Kids</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
@@ -75,19 +76,19 @@ export function AllKidsTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentKids.map((kid) => (
-                <TableRow key={kid.id}>
-                  <TableCell className="text-center font-medium">{kid.id}</TableCell>
+              {currentKids.map((kid, index) => (
+                <TableRow key={index + 1}>
+                  <TableCell className="text-center font-medium">{index + 1}</TableCell>
                   <TableCell>{kid.name}</TableCell>
                   <TableCell>{kid.reportsCount}</TableCell>
                   <TableCell className="text-right py-0">
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-end pr-8">
                       <Link href={`${pathname}/kid-details/${kid.id}`}>
                         <Button
                           variant="ghost"
                           className="h-auto text-primary-blue hover:text-primary-blue hover:bg-primary-blue/10 gap-1"
                         >
-                          <VisibleIcon className="!h-5 !w-5" />
+                          <VisibleIcon className="h-5! w-5!" />
                           View
                         </Button>
                       </Link>

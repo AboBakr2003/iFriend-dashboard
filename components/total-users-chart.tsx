@@ -15,29 +15,17 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Button } from "./ui/button"
-// import { getTotalUsers } from "@/services/queries/home/total-users"
 import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { getUserAnalysisChart, AnalysisPeriod } from "@/services/queries/analysis/analysis-chart"
+import { getAnalysisChart, AnalysisPeriod } from "@/services/queries/analysis/get/get-analysis-chart"
 
 // Dynamic chart state populated from API
 type DynamicChartRow = { period: string; [key: string]: number | string }
 
-const defaultPalette = [
-  "#0066FF",
-  "#4D94FF",
-  "#80B3FF",
-  "#B3D1FF",
-  "#D9E6FF",
-  "#6EE7B7",
-  "#F59E0B",
-  "#EF4444",
-  "#A78BFA",
-  "#10B981",
-]
+const defaultPalette = [ "#0066FF", "#4D94FF", "#80B3FF", "#B3D1FF", "#D9E6FF", "#6EE7B7", "#F59E0B", "#EF4444", "#A78BFA", "#10B981"]
 
 export function TotalUsersChart({ barSize, justifyDiscount, showTimeFilter }: { barSize: number, justifyDiscount: string, showTimeFilter?: boolean }) {
-  const [timeRange, setTimeRange] = useState<AnalysisPeriod>("yearly")
+  const [timeRange, setTimeRange] = useState<AnalysisPeriod>("weekly")
   const [totalUsers, setTotalUsers] = useState<number>(0)
   const [rows, setRows] = useState<DynamicChartRow[]>([])
   const [config, setConfig] = useState<ChartConfig>({})
@@ -45,22 +33,10 @@ export function TotalUsersChart({ barSize, justifyDiscount, showTimeFilter }: { 
   const router = useRouter()
   const pathname = usePathname().split("/")[1]
 
-  // useEffect(() => {
-  // (async () => {
-  //   try {
-  //     const result = await getTotalUsers()
-  //     const totalUsers = result.data?.totalUsers
-  //     setTotalUsers(totalUsers ?? 0)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // })()
-  // }, [])
-
   useEffect(() => {
     (async () => {
       try {
-        const res = await getUserAnalysisChart(timeRange)
+        const res = await getAnalysisChart(timeRange)
         if (res.success && res.data) {
           // Build dynamic rows for Recharts
           const labels = res.data.labels
@@ -98,7 +74,7 @@ export function TotalUsersChart({ barSize, justifyDiscount, showTimeFilter }: { 
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
         <div className="flex flex-col space-y-1 w-full border-b pb-4">
           <div className="flex items-center justify-between w-full mb-0">
-            <CardTitle className="text-base font-medium">
+            <CardTitle className="font-normal text-lg">
               Total Users
             </CardTitle>
             {showTimeFilter && (
@@ -121,7 +97,7 @@ export function TotalUsersChart({ barSize, justifyDiscount, showTimeFilter }: { 
             )}
           </div>
           <div className={`w-full flex items-end gap-4 ${justifyDiscount}`}>
-            <span className="text-2xl font-bold">{totalUsers}</span>
+            <span className="text-3xl font-semibold">{totalUsers}</span>
             <div className="flex items-center gap-1">
               <span className="text-xs font-medium text-rose-500 bg-rose-500/10 px-2 py-1 rounded-lg">
                 -1.8%

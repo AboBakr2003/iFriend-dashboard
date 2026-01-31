@@ -25,11 +25,9 @@ export type RegionAnalysisResponse = {
   data: RegionAnalysisData;
 };
 
-export const getRegionAnalysis = async (page = 1, limit = 10) => {
+export const getRegionAnalysis = async () => {
   try {
-    const res = await api.get<RegionAnalysisResponse>("/analysis/region-analysis", {
-      params: { page, limit },
-    });
+    const res = await api.get<RegionAnalysisResponse>("/analysis/region-analysis");
 
     return {
       success: true as const,

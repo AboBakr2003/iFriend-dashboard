@@ -1,4 +1,4 @@
-import UsersContent from "@/features/users-management/users-content";
+import UsersContent from "@/features/users-management/users-management-content";
 export default function Page() {
   return (
     <div>

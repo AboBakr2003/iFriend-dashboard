@@ -1,60 +1,57 @@
 "use client"
 
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import VisibleIcon from "@/public/visible-icon"
-import FilterIcon from "@/public/filter-icon"
-import SearchIcon from "@/public/search-icon"
 import { ArrowLeftIcon } from "@/public/arrow-left-icon"
 import { ArrowRightIcon } from "@/public/arrow-right-icon"
 import ArrowDownIcon from "@/public/arrow-down-icon"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getAllParents, AllParentsItem } from "@/services/queries/users-management/get/get-all-parents"
+import { UsersFilter } from "./users-filter"
 
-import { users } from "../data/mock-users"
 
 export function AllUsersTable() {
+  // Format: 23 March,2024
+  const formatRegistrationDate = (iso: string): string => {
+    const d = new Date(iso)
+    if (Number.isNaN(d.getTime())) return iso
+    const day = d.getDate()
+    const month = d.toLocaleString("en-US", { month: "long" })
+    const year = d.getFullYear()
+    return `${day} ${month},${year}`
+  }
+
   const [kidsFilter, setKidsFilter] = useState("")
   const [subscriptionFilters, setSubscriptionFilters] = useState<string[]>([])
   const [dateFilter, setDateFilter] = useState("")
+  const [search, setSearch] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
+  const [users, setUsers] = useState<AllParentsItem[]>([])
   const itemsPerPage = 10
 
   const pathname = usePathname()
 
   const filteredUsers = users.filter((user) => {
-    const matchesKids = kidsFilter ? user.kids.toString() === kidsFilter : true
+    const matchesName = search ? user.name?.toLowerCase().includes(search.toLowerCase()) : true
+    const matchesKids = kidsFilter ? user.kidsCount.toString() === kidsFilter : true
     const matchesSubscription =
-      subscriptionFilters.length > 0 ? subscriptionFilters.includes(user.subscription) : true
+      subscriptionFilters.length > 0 ? subscriptionFilters.includes(user.isSubscribed ? "Subscribed" : "Not Subscribed") : true
 
     let matchesDate = true
     if (dateFilter) {
       // Mock date format: "23 March,2024"
       // We need to handle the comma carefully or rely on Date parsing
-      const userDate = new Date(user.date.replace(",", ", "))
+      const userDate = new Date(user.registrationDate || "")
       const filterDate = new Date(dateFilter)
       // Compare by locale date string or similar to ignore time
       matchesDate = userDate.toDateString() === filterDate.toDateString()
     }
 
-    return matchesKids && matchesSubscription && matchesDate
+    return matchesName && matchesKids && matchesSubscription && matchesDate
   })
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage)
@@ -77,93 +74,41 @@ export function AllUsersTable() {
     }
   }
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await getAllParents()
+        if (res.success && res.data) {
+          setUsers(res.data.users ?? [])
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [])
+
   return (
     <div>
       <Card className="w-full bg-white rounded-xl border">
         <CardHeader className="flex flex-col md:flex-row justify-between items-center gap-4 p-4">
-          <CardTitle className="text-black text-lg font-semibold grow-1 m-0">All Users</CardTitle>
-          <div className="relative w-72 m-0">
-            <SearchIcon className="absolute fill-natural right-2 top-1/2 -translate-y-1/2" />
-            <Input placeholder="Search" className="pr-10 rounded-lg placeholder:text-natural-text" />
-          </div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="default" className="bg-primary-blue hover:bg-primary-blue-hover gap-2 rounded-lg p-5">
-                <FilterIcon className="!w-5.5 !h-5.5 fill-white" />
-                Filter
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-4" align="end">
-              <div className="grid gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="kids">Kids Count</Label>
-                  <Input
-                    id="kids"
-                    type="number"
-                    placeholder=""
-                    value={kidsFilter}
-                    onChange={(e) => setKidsFilter(e.target.value)}
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Subscription Status</Label>
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="active"
-                      checked={subscriptionFilters.includes("Active")}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSubscriptionFilters([...subscriptionFilters, "Active"])
-                        } else {
-                          setSubscriptionFilters(subscriptionFilters.filter((s) => s !== "Active"))
-                        }
-                      }}
-                    />
-                    <Label htmlFor="active" className="font-normal">
-                      Active
-                    </Label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="not-subscribed"
-                      checked={subscriptionFilters.includes("Not Subscribed")}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSubscriptionFilters([...subscriptionFilters, "Not Subscribed"])
-                        } else {
-                          setSubscriptionFilters(subscriptionFilters.filter((s) => s !== "Not Subscribed"))
-                        }
-                      }}
-                    />
-                    <Label htmlFor="not-subscribed" className="font-normal">
-                      Not Subscribed
-                    </Label>
-                  </div>
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="date">Registration Date</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    className="flex justify-between"
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                  />
-                </div>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setKidsFilter("")
-                    setSubscriptionFilters([])
-                    setDateFilter("")
-                    setCurrentPage(1)
-                  }}
-                >
-                  Reset Filters
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <CardTitle className="text-black text-lg font-semibold grow m-0">All Users</CardTitle>
+          <UsersFilter
+            kidsFilter={kidsFilter}
+            setKidsFilter={setKidsFilter}
+            subscriptionFilters={subscriptionFilters}
+            setSubscriptionFilters={setSubscriptionFilters}
+            dateFilter={dateFilter}
+            setDateFilter={setDateFilter}
+            search={search}
+            setSearch={setSearch}
+            onReset={() => {
+              setKidsFilter("")
+              setSubscriptionFilters([])
+              setDateFilter("")
+              setSearch("")
+              setCurrentPage(1)
+            }}
+          />
         </CardHeader>
 
         <CardContent className="p-0">
@@ -185,7 +130,7 @@ export function AllUsersTable() {
                 </TableHead>
                 <TableHead>
                   <div className="flex items-center gap-1">
-                    Subscription
+                    Subscription State
                     <ArrowDownIcon className="w-4 h-4 fill-natural" />
                   </div>
                 </TableHead>
@@ -199,18 +144,18 @@ export function AllUsersTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentUsers.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="text-center font-medium">{user.id}</TableCell>
-                  <TableCell>{`${user.firstName} ${user.lastName}`}</TableCell>
-                  <TableCell>{user.kids}</TableCell>
-                  <TableCell><span className={`text-${user.subscription === "Active" ? "success" : "danger"}`}>{user.subscription}</span></TableCell>
-                  <TableCell>{user.date}</TableCell>
+              {currentUsers.map((user, index) => (
+                <TableRow key={index}>
+                  <TableCell className="text-center font-medium">{index + 1}</TableCell>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.kidsCount}</TableCell>
+                  <TableCell><span className={`text-${user.isSubscribed ? "success" : "danger"}`}>{user.isSubscribed ? "Subscribed" : "Not Subscribed"}</span></TableCell>
+                  <TableCell>{formatRegistrationDate(user.registrationDate)}</TableCell>
                   <TableCell className="text-right py-0">
                     <div className="flex items-center justify-center">
                       <Button asChild variant="ghost" className="h-auto text-primary-blue hover:text-primary-blue hover:bg-primary-blue/10 gap-1">
-                        <Link href={`${pathname}/user-details/${user.id}`}>
-                          <VisibleIcon className="!h-5 !w-5" />
+                        <Link href={`${pathname}/parent-details/${user.id}`}>
+                          <VisibleIcon className="h-5! w-5!" />
                           View
                         </Link>
                       </Button>
