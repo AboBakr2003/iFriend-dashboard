@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getParentsStats, type ParentsStatsData } from "@/services/queries/users-management/get/get-parents-stats";
+import { getParentsStats, type ParentsStatsData } from "@/services/queries/users-management/GET/get-parents-stats";
 import { useRouter } from "next/navigation";
 
 type StatsCardsProps = {

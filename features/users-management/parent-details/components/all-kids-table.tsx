@@ -19,7 +19,7 @@ import { usePathname } from "next/navigation"
 
 import Link from "next/link"
 
-import type { ParentChildrenData } from "@/services/queries/users-management/get/get-parent-details"
+import type { ParentChildrenData } from "@/services/queries/users-management/GET/get-parent-details"
 
 export function AllKidsTable({ kids }: { kids: ParentChildrenData[] }) {
   

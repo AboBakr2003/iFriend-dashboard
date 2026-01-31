@@ -12,27 +12,24 @@ import {
 } from "@/components/ui/popover"
 import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils"
+import { useEffect } from "react"
+import { getAllPermissions } from "@/services/queries/settings/role/GET/get-all-permissions"
+import { PermissionItemsData } from "@/services/queries/settings/role/GET/get-all-permissions"
+import { createRole } from "@/services/queries/settings/role/POST/post-create-role"
+import { toast } from "sonner"
 
 interface CreateRoleDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  onCreated?: () => void
 }
 
-const accessOptions = [
-  "Dashboard",
-  "Revenue",
-  "Analysis",
-  "Subscription Management",
-  "Payment Methods",
-  "Users Management",
-  "Notification",
-  "Feedback",
-  "Users Role",
-]
-
-export function CreateRoleCard({ open, onOpenChange }: CreateRoleDialogProps) {
+export function CreateRoleCard({ open, onOpenChange, onCreated }: CreateRoleDialogProps) {
   const [selectedAccess, setSelectedAccess] = React.useState<string[]>([])
   const [isClosing, setIsClosing] = React.useState(false)
+  const [permissions, setPermissions] = React.useState<PermissionItemsData[]>([])
+  const [roleName, setRoleName] = React.useState("")
+  const [submitting, setSubmitting] = React.useState(false)
 
   const handleClose = () => {
     setIsClosing(true)
@@ -50,7 +47,7 @@ export function CreateRoleCard({ open, onOpenChange }: CreateRoleDialogProps) {
     )
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open || isClosing) {
       document.body.style.overflow = "hidden"
     } else {
@@ -61,12 +58,47 @@ export function CreateRoleCard({ open, onOpenChange }: CreateRoleDialogProps) {
     }
   }, [open, isClosing])
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await getAllPermissions()
+        if (res.success && res.data) {
+          setPermissions(res.data ?? [])
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    })()
+  }, [])
+
+  const handleAdd = async () => {
+    if (!roleName.trim() || selectedAccess.length === 0) {
+      return
+    }
+    setSubmitting(true)
+    try {
+      const res = await createRole(roleName.trim(), selectedAccess)
+      if (res.success) {
+        onCreated?.()
+        setRoleName("")
+        setSelectedAccess([])
+        handleClose()
+        toast(`${res.message} ✅`)
+      }
+    } catch (e) {
+      console.error(e)
+      toast(`Failed to create role ❌`)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   if (!open && !isClosing) return null
 
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm m-0 duration-200",
+        "fixed inset-0 z-9999 flex items-center justify-center bg-black/50 backdrop-blur-sm m-0 duration-200",
         isClosing ? "animate-out fade-out-0" : "animate-in fade-in-0"
       )}
     >
@@ -77,55 +109,57 @@ export function CreateRoleCard({ open, onOpenChange }: CreateRoleDialogProps) {
         )}
       >
         <div className="flex flex-col space-y-6">
-          <h2 className="text-xl font-semibold">Create Role</h2>
+          <h2 className="text-xl font-medium">Create Role</h2>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="role-name" className="text-sm font-medium text-gray-700">
-                Role Name <span className="text-red-500">*</span>
+              <Label htmlFor="role-name" className="text-base text-natural-text">
+                Role Name <span className="text-danger">*</span>
               </Label>
               <Input
                 id="role-name"
                 placeholder="Role Name"
-                className="bg-natural focus-visible:ring-blue-500"
+                className="bg-natural focus-visible:ring-primary-blue placeholder:text-natural-text/50"
+                value={roleName}
+                onChange={(e) => setRoleName(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">
-                Access <span className="text-red-500">*</span>
+              <Label className="text-base text-natural-text">
+                Access <span className="text-danger">*</span>
               </Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-between bg-natural hover:bg-gray-100 font-normal",
-                      selectedAccess.length === 0 && "text-muted-foreground"
+                      "w-full justify-between bg-natural hover:bg-gray-100 font-normal text-natural-text",
+                      selectedAccess.length === 0 && "text-natural-text/50"
                     )}
                   >
                     {selectedAccess.length > 0
                       ? `${selectedAccess.length} selected`
-                      : "Select an option"}
+                      : "Select permissions"}
                     <ArrowDown2Icon className="h-4 w-4 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-100 p-4 z-[99999]" align="start">
+                <PopoverContent className="w-100 p-4 z-99999" align="start">
                   <div className="space-y-2">
                     <h4 className="font-medium leading-none mb-3">Select Access</h4>
                     <div className="grid gap-2 max-h-[300px] overflow-y-auto">
-                      {accessOptions.map((option) => (
-                        <div key={option} className="flex items-center space-x-2">
+                      {permissions.map((permission, index) => (
+                        <div key={index + 1} className="flex items-center space-x-2">
                           <Checkbox
-                            id={`access-${option}`}
-                            checked={selectedAccess.includes(option)}
-                            onCheckedChange={() => toggleAccess(option)}
+                            id={`${permission.name}`}
+                            checked={selectedAccess.includes(permission.id)}
+                            onCheckedChange={() => toggleAccess(permission.id)}
                           />
                           <Label
-                            htmlFor={`access-${option}`}
-                            className="text-sm font-normal cursor-pointer"
+                            htmlFor={`${permission.name}`}
+                            className="text-sm text-natural-text font-normal cursor-pointer"
                           >
-                            {option}
+                            {permission.name}
                           </Label>
                         </div>
                       ))}
@@ -139,7 +173,8 @@ export function CreateRoleCard({ open, onOpenChange }: CreateRoleDialogProps) {
           <div className="flex items-center gap-4 justify-between mt-2">
             <Button
               className="w-full p-6 bg-primary-blue hover:bg-primary-blue-hover text-white rounded-lg"
-              onClick={handleClose}
+              onClick={handleAdd}
+              disabled={submitting}
             >
               Add
             </Button>

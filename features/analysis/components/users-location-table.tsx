@@ -10,7 +10,7 @@ import ArrowDownIcon from "@/public/arrow-down-icon"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { useEffect, useState } from "react"
 import FilterationUsersLocation from "./users-location-filter"
-import { getRegionAnalysis, RegionAnalysisItem } from "@/services/queries/analysis/get/get-region-analysis"
+import { getRegionAnalysis, RegionAnalysisItem } from "@/services/queries/analysis/GET/get-region-analysis"
 
 export function UsersLocationTable() {
   const [currentPage, setCurrentPage] = useState(1)

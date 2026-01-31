@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import ArrowDownIcon from "@/public/arrow-down-icon"
 import DownloadIcon from "@/public/download-icon"
-import type { KidDetailsData } from "@/services/queries/users-management/get/get-kid-details"
+import type { KidDetailsData } from "@/services/queries/users-management/GET/get-kid-details"
 import { useEffect, useState } from "react"
-import { getKidDetails } from "@/services/queries/users-management/get/get-kid-details"
+import { getKidDetails } from "@/services/queries/users-management/GET/get-kid-details"
 import IFriendSpinner from "@/components/ifriend-spinner"
 
 const reports = [

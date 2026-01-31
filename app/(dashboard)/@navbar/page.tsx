@@ -8,7 +8,7 @@ import { menuItems } from "@/app/(dashboard)/@sidebar/page";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import SignOutIcon from "@/public/sign-out-icon";
-import { getMe } from "@/services/queries/settings/user/get/get-me";
+import { getMe } from "@/services/queries/settings/user/GET/get-me";
 import UserProfileOutlineIcon from "@/public/user-profile-outline-icon";
 
 

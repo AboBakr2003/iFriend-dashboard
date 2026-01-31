@@ -12,7 +12,7 @@ import StatsCards from "@/components/stats-cards";
 
 export default function UsersContent() {
   return (
-    <div className="flex flex-col gap-5 w-full">
+    <div className="flex flex-col gap-5 w-full select-none">
       {/* Breadcrumb */}
       <Breadcrumb>
         <BreadcrumbList>

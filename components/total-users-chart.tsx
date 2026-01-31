@@ -17,7 +17,7 @@ import {
 import { Button } from "./ui/button"
 import { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { getAnalysisChart, AnalysisPeriod } from "@/services/queries/analysis/get/get-analysis-chart"
+import { getAnalysisChart, AnalysisPeriod } from "@/services/queries/analysis/GET/get-analysis-chart"
 
 // Dynamic chart state populated from API
 type DynamicChartRow = { period: string; [key: string]: number | string }
