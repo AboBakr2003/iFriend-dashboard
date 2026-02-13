@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { z } from "zod"
 import ArrowDown2Icon from "@/public/arrow-down-2-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,7 +17,9 @@ import { useEffect } from "react"
 import { getAllPermissions } from "@/services/queries/settings/role/GET/get-all-permissions"
 import { PermissionItemsData } from "@/services/queries/settings/role/GET/get-all-permissions"
 import { createRole } from "@/services/queries/settings/role/POST/post-create-role"
+import { getAllRoles, RoleItemsData } from "@/services/queries/settings/role/GET/get-all-roles"
 import { toast } from "sonner"
+import { X } from "lucide-react"
 
 interface CreateRoleDialogProps {
   open: boolean
@@ -30,12 +33,19 @@ export function CreateRoleCard({ open, onOpenChange, onCreated }: CreateRoleDial
   const [permissions, setPermissions] = React.useState<PermissionItemsData[]>([])
   const [roleName, setRoleName] = React.useState("")
   const [submitting, setSubmitting] = React.useState(false)
+  const [roles, setRoles] = React.useState<RoleItemsData[]>([])
+  const [roleNameError, setRoleNameError] = React.useState("")
+  const [accessError, setAccessError] = React.useState("")
 
   const handleClose = () => {
     setIsClosing(true)
     setTimeout(() => {
       onOpenChange(false)
       setIsClosing(false)
+      setRoleName("")
+      setSelectedAccess([])
+      setRoleNameError("")
+      setAccessError("")
     }, 200)
   }
 
@@ -65,16 +75,33 @@ export function CreateRoleCard({ open, onOpenChange, onCreated }: CreateRoleDial
         if (res.success && res.data) {
           setPermissions(res.data ?? [])
         }
+        const rolesRes = await getAllRoles()
+        if (rolesRes.success && rolesRes.data) {
+          setRoles(rolesRes.data)
+        }
       } catch (e) {
         console.error(e)
       }
     })()
   }, [])
 
+  const existingRoleNames = React.useMemo(() => new Set(roles.map(r => (r.name || "").trim().toLowerCase())), [roles])
+
+  const roleNameSchema = React.useMemo(() =>
+    z.string()
+      .trim()
+      .min(3, "Role name must be at least 3 characters")
+      .refine((val) => !existingRoleNames.has(val.trim().toLowerCase()), { message: "Role name already exists" })
+    , [existingRoleNames])
+
+  const accessSchema = z.array(z.string()).min(1, "Select at least one permission")
+
   const handleAdd = async () => {
-    if (!roleName.trim() || selectedAccess.length === 0) {
-      return
-    }
+    const nameResult = roleNameSchema.safeParse(roleName)
+    const accessResult = accessSchema.safeParse(selectedAccess)
+    setRoleNameError(nameResult.success ? "" : (nameResult.error.issues[0]?.message || "Invalid role name"))
+    setAccessError(accessResult.success ? "" : (accessResult.error.issues[0]?.message || "Please select permissions"))
+    if (!nameResult.success || !accessResult.success) return
     setSubmitting(true)
     try {
       const res = await createRole(roleName.trim(), selectedAccess)
@@ -108,12 +135,21 @@ export function CreateRoleCard({ open, onOpenChange, onCreated }: CreateRoleDial
           isClosing ? "animate-out zoom-out-50" : "animate-in zoom-in-50"
         )}
       >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 h-6 w-6 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-offset-2 disabled:pointer-events-none"
+          onClick={handleClose}
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </Button>
         <div className="flex flex-col space-y-6">
           <h2 className="text-xl font-medium">Create Role</h2>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="role-name" className="text-base text-natural-text">
+              <Label htmlFor="role-name">
                 Role Name <span className="text-danger">*</span>
               </Label>
               <Input
@@ -121,12 +157,17 @@ export function CreateRoleCard({ open, onOpenChange, onCreated }: CreateRoleDial
                 placeholder="Role Name"
                 className="bg-natural focus-visible:ring-primary-blue placeholder:text-natural-text/50"
                 value={roleName}
-                onChange={(e) => setRoleName(e.target.value)}
+                onChange={(e) => { setRoleName(e.target.value); if (roleNameError) setRoleNameError("") }}
+                onBlur={() => {
+                  const res = roleNameSchema.safeParse(roleName)
+                  setRoleNameError(res.success ? "" : (res.error.issues[0]?.message || "Invalid role name"))
+                }}
               />
+              {roleNameError ? (<p className="text-xs text-danger">{roleNameError}</p>) : null}
             </div>
 
             <div className="space-y-2">
-              <Label className="text-base text-natural-text">
+              <Label>
                 Access <span className="text-danger">*</span>
               </Label>
               <Popover>
@@ -167,6 +208,7 @@ export function CreateRoleCard({ open, onOpenChange, onCreated }: CreateRoleDial
                   </div>
                 </PopoverContent>
               </Popover>
+              {accessError ? (<p className="text-xs text-danger">{accessError}</p>) : null}
             </div>
           </div>
 

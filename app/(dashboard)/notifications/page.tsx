@@ -1,7 +1,7 @@
+import NotificationsContent from "@/features/notifications/notificatioms-content";
+
 export default function Page() {
-    return (
-        <div>
-            <h1>Notifications</h1>
-        </div>
-    );
+  return (
+    <NotificationsContent />
+  );
 }

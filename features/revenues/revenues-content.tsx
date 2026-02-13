@@ -1,3 +1,4 @@
+"use client"
 import { TotalRevenueChart } from "@/components/total-revenue-chart";
 
 export default function RevenueContent() {

@@ -20,12 +20,12 @@ import { usePathname, useRouter } from "next/navigation"
 import { getAnalysisChart, AnalysisPeriod } from "@/services/queries/analysis/GET/get-analysis-chart"
 
 // Dynamic chart state populated from API
-type DynamicChartRow = { period: string; [key: string]: number | string }
+type DynamicChartRow = { period: string;[key: string]: number | string }
 
-const defaultPalette = [ "#0066FF", "#4D94FF", "#80B3FF", "#B3D1FF", "#D9E6FF", "#6EE7B7", "#F59E0B", "#EF4444", "#A78BFA", "#10B981"]
+const defaultPalette = ["#0066FF", "#4D94FF", "#80B3FF", "#B3D1FF", "#D9E6FF", "#6EE7B7", "#F59E0B", "#EF4444", "#A78BFA", "#10B981"]
 
 export function TotalUsersChart({ barSize, justifyDiscount, showTimeFilter }: { barSize: number, justifyDiscount: string, showTimeFilter?: boolean }) {
-  const [timeRange, setTimeRange] = useState<AnalysisPeriod>("weekly")
+  const [timeRange, setTimeRange] = useState<AnalysisPeriod>("yearly")
   const [totalUsers, setTotalUsers] = useState<number>(0)
   const [rows, setRows] = useState<DynamicChartRow[]>([])
   const [config, setConfig] = useState<ChartConfig>({})
@@ -70,7 +70,7 @@ export function TotalUsersChart({ barSize, justifyDiscount, showTimeFilter }: { 
   }, [timeRange])
 
   return (
-    <Card className={`w-full h-full ${pathname !== "analysis" && "hover:shadow-lg hover:scale-102 transition-all duration-200 cursor-pointer"}`} onClick={() => router.push("/analysis")}>
+    <Card className={`h-full ${pathname !== "analysis" && "hover:shadow-lg hover:scale-102 transition-all duration-200 cursor-pointer"}`} onClick={() => router.push("/analysis")}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4">
         <div className="flex flex-col space-y-1 w-full border-b pb-4">
           <div className="flex items-center justify-between w-full mb-0">
@@ -85,9 +85,9 @@ export function TotalUsersChart({ barSize, justifyDiscount, showTimeFilter }: { 
                     onClick={() => setTimeRange(range)}
                     className={`px-6 py-3 rounded-lg cursor-pointer shadow transition-all duration-200 
                       ${timeRange === range
-                      ? "bg-primary-blue text-white hover:bg-primary-blue-hover"
-                      : "bg-primary-blue/10 text-primary-blue hover:bg-primary-blue/20"
-                    }`}
+                        ? "bg-primary-blue text-white hover:bg-primary-blue-hover"
+                        : "bg-primary-blue/10 text-primary-blue hover:bg-primary-blue/20"
+                      }`}
                     variant={"default"}
                   >
                     {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -123,7 +123,7 @@ export function TotalUsersChart({ barSize, justifyDiscount, showTimeFilter }: { 
               tickLine={false}
               axisLine={false}
               tickMargin={10}
-              // Let Recharts compute domain from data
+            // Let Recharts compute domain from data
             />
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />

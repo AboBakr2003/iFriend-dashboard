@@ -73,17 +73,19 @@ export function AlertWindow({
 
         <AlertDialogFooter className="flex w-full flex-row items-center justify-center gap-4 sm:justify-center sm:space-x-0">
           <Button
-            className="p-6 w-full bg-danger/80 hover:bg-danger"
+            className="p-6 w-1/2 bg-danger/80 hover:bg-danger"
             onClick={onConfirm}
           >
             {confirmText}
           </Button>
-          <Button
-            className="shadow-none p-6 w-full text-natural-text bg-white hover:text-black hover:bg-natural"
-            onClick={onCancel}
-          >
-            {cancelText}
-          </Button>
+          {onCancel && (
+            <Button
+              className="shadow-none p-6 w-1/2 text-natural-text bg-white hover:text-black hover:bg-natural"
+              onClick={onCancel}
+            >
+              {cancelText}
+            </Button>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

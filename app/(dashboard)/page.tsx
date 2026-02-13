@@ -1,7 +1,7 @@
-import HomeContent from "@/features/home/home-content";
+import DashboardContent from "@/features/dashboard/dashboard-content";
 
 export default function Home() {
   return (
-    <HomeContent />
+    <DashboardContent />
   );
 }

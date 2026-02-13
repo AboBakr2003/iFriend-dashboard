@@ -1,3 +1,5 @@
+import ProtectedRoute from "@/components/protected-route";
+
 export default function DashboardLayout({
   children,
   sidebar,
@@ -8,12 +10,14 @@ export default function DashboardLayout({
   navbar: React.ReactNode;
 }) {
   return (
-    <div>
-      {sidebar}
-      {navbar}
-      <main className="main-content">
-        {children}
-      </main>
-    </div>
+    <ProtectedRoute>
+      <div>
+        {sidebar}
+        {navbar}
+        <main className="main-content">
+          {children}
+        </main>
+      </div>
+    </ProtectedRoute>
   );
 }

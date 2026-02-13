@@ -12,57 +12,52 @@ import FeedBackIcon from "@/public/feed-back-icon";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/contexts/auth-context";
+import { useMemo } from "react";
+import { MENU_ROUTES } from "@/lib/menu-routes";
 
-export const menuItems = [
-  {
-    name: "Home",
-    href: "/",
-    iconName: HomeIcon,
-  },
-  {
-    name: "Revenues",
-    href: "/revenues",
-    iconName: RevenuesIcon,
-  },
-  {
-    name: "Analysis",
-    href: "/analysis",
-    iconName: AnalysisIcon,
-  },
-  {
-    name: "Subscriptions Management",
-    href: "/subscriptions",
-    iconName: SubscriptionsIcon,
-  },
-  {
-    name: "Payment Methods",
-    href: "/payment",
-    iconName: PaymentIcon,
-  },
-  {
-    name: "Users Management",
-    href: "/users-management",
-    iconName: UsersIcon,
-  },
-  {
-    name: "Notifications",
-    href: "/notifications",
-    iconName: NotificationsIcon,
-  },
-  {
-    name: "Feedback",
-    href: "/feedback",
-    iconName: FeedBackIcon,
-  },
-  {
-    name: "Settings",
-    href: "/settings",
-    iconName: SettingsIcon,
-  },
-];
+type MenuItem = {
+  name: string;
+  href: string;
+  iconName: React.ComponentType<{ className?: string }>;
+  requiredPermissions?: string[];
+};
+
+// Icon mapping for menu items
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  "/": HomeIcon,
+  "/revenues": RevenuesIcon,
+  "/analysis": AnalysisIcon,
+  "/subscriptions": SubscriptionsIcon,
+  "/payment": PaymentIcon,
+  "/users-management": UsersIcon,
+  "/notifications": NotificationsIcon,
+  "/feedback": FeedBackIcon,
+  "/settings": SettingsIcon,
+};
+
+// Convert MENU_ROUTES to menuItems with icons
+export const menuItems: MenuItem[] = MENU_ROUTES.map(route => ({
+  ...route,
+  iconName: iconMap[route.href] || HomeIcon,
+}));
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { permissions } = useAuth();
+
+  // Filter menu items based on user permissions
+  const allowedMenuItems = useMemo(() => {
+    return menuItems.filter(item => {
+      if (!item.requiredPermissions || item.requiredPermissions.length === 0) {
+        return true;
+      }
+
+      return item.requiredPermissions.some(permission =>
+        permissions.includes(permission)
+      );
+    });
+  }, [permissions]);
 
   return (
     <aside className="fixed top-0 left-0 w-76 h-screen bg-dark-blue flex flex-col p-2 z-100">
@@ -80,7 +75,7 @@ export default function Sidebar() {
       {/* Navigation Menu */}
       <nav className="flex-1 overflow-y-auto custom-scrollbar">
         <ul className="list-none mr-2 2xl:mr-0 p-0">
-          {menuItems.map((item) => {
+          {allowedMenuItems.map((item) => {
             const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(`${item.href}/`));
 
             return (

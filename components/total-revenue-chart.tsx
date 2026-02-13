@@ -67,8 +67,8 @@ export function TotalRevenueChart({ justifyDiscount, showTimeFilter }: { justify
                     onClick={() => setTimeRange(range)}
                     className={`px-6 py-3 rounded-lg cursor-pointer shadow transition-all duration-200
                       ${timeRange === range
-                      ? "bg-primary-blue text-white hover:bg-primary-blue-hover"
-                      : "bg-primary-blue/10 text-primary-blue hover:bg-primary-blue/20"
+                        ? "bg-primary-blue text-white hover:bg-primary-blue-hover"
+                        : "bg-primary-blue/10 text-primary-blue hover:bg-primary-blue/20"
                       }`}
                     variant={"default"}
                   >

@@ -10,7 +10,7 @@ import EmailIcon from "@/public/email-icon";
 import PasswordIcon from "@/public/password-icon";
 import VisibleIcon from "@/public/visible-icon";
 import UnvisibleIcon from "@/public/unvisible-icon";
-import { signIn } from "@/services/queries/sign-in/POST/sign-in";
+import { signIn } from "@/services/queries/auth/POST/sign-in";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/auth-context";
 
@@ -92,7 +92,7 @@ export default function SignInContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="info@example.com"
-                className="h-12 border-gray-100 bg-natural pl-10 placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-blue-500"
+                className="h-12 border-gray-100 bg-natural pl-10 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-primary-blue"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function SignInContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="h-12 border-gray-100 bg-natural px-10 placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-blue-500"
+                className="h-12 border-gray-100 bg-natural px-10 placeholder:text-gray-400 focus-visible:ring-2 focus-visible:ring-primary-blue"
               />
               <button
                 type="button"

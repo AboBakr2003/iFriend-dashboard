@@ -12,18 +12,11 @@ import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getAllParents, AllParentsItem } from "@/services/queries/users-management/GET/get-all-parents"
 import { UsersFilter } from "./users-filter"
+import { formatRegistrationDate } from "@/lib/utils"
 
 
 export function AllUsersTable() {
-  // Format: 23 March,2024
-  const formatRegistrationDate = (iso: string): string => {
-    const d = new Date(iso)
-    if (Number.isNaN(d.getTime())) return iso
-    const day = d.getDate()
-    const month = d.toLocaleString("en-US", { month: "long" })
-    const year = d.getFullYear()
-    return `${day} ${month},${year}`
-  }
+
 
   const [kidsFilter, setKidsFilter] = useState("")
   const [subscriptionFilters, setSubscriptionFilters] = useState<string[]>([])

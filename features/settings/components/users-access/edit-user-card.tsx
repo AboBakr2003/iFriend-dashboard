@@ -10,6 +10,7 @@ import { getAllRoles, RoleItemsData } from "@/services/queries/settings/role/GET
 import { DashboardUserData } from "@/services/queries/settings/user/GET/get-all-users"
 import { patchUpdateDashboardUser } from "@/services/queries/settings/user/PATCH/patch-update-user"
 import { toast } from "sonner"
+import { X } from "lucide-react"
 
 interface EditUserDialogProps {
   open: boolean
@@ -23,6 +24,7 @@ export function EditUserCard({ open, onOpenChange, user, onUpdated }: EditUserDi
   const [roles, setRoles] = React.useState<RoleItemsData[]>([])
   const [selectedRoleId, setSelectedRoleId] = React.useState<string>("")
   const [loading, setLoading] = React.useState(false)
+  const [rolePopoverOpen, setRolePopoverOpen] = React.useState(false)
 
   React.useEffect(() => {
     if (!open) return
@@ -70,15 +72,15 @@ export function EditUserCard({ open, onOpenChange, user, onUpdated }: EditUserDi
       setLoading(true)
       const res = await patchUpdateDashboardUser({ userId: user.id, roleId: selectedRoleId })
       if (res.success) {
-        toast("User updated successfully ✅")
+        toast("User role updated successfully ✅")
         onUpdated?.()
         handleClose()
       } else {
-        toast(res.message || "Failed to update user ❌")
+        toast(res.message || "Failed to update user role ❌")
       }
     } catch (e) {
       console.error(e)
-      toast("Failed to update user ❌")
+      toast("Failed to update user role ❌")
     } finally {
       setLoading(false)
     }
@@ -101,21 +103,30 @@ export function EditUserCard({ open, onOpenChange, user, onUpdated }: EditUserDi
           isClosing ? "animate-out zoom-out-50" : "animate-in zoom-in-50"
         )}
       >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 h-6 w-6 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-offset-2 disabled:pointer-events-none"
+          onClick={handleClose}
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </Button>
         <div className="flex flex-col space-y-6">
           <h2 className="text-xl font-semibold">Edit {user?.name} Role</h2>
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-sm">
-                Role <span className="text-red-500">*</span>
+              <Label>
+                Role
               </Label>
-              <Popover>
+              <Popover open={rolePopoverOpen} onOpenChange={setRolePopoverOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
                     className={cn(
                       "w-full justify-between bg-natural border-gray-100 hover:bg-gray-100 font-normal",
-                      !selectedRoleId && "text-muted-foreground"
+                      !selectedRoleId && "text-natural-text/50"
                     )}
                   >
                     {selectedRoleName}
@@ -127,7 +138,7 @@ export function EditUserCard({ open, onOpenChange, user, onUpdated }: EditUserDi
                     {roles.map((role) => (
                       <button
                         key={role.id}
-                        onClick={() => setSelectedRoleId(role.id)}
+                        onClick={() => { setSelectedRoleId(role.id); setRolePopoverOpen(false) }}
                         className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-md transition-colors"
                       >
                         {role.name}

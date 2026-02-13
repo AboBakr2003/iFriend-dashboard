@@ -7,21 +7,12 @@ import { useEffect, useState } from "react"
 import { getParentDetails } from "@/services/queries/users-management/GET/get-parent-details"
 import type { ParentDetailsData } from "@/services/queries/users-management/GET/get-parent-details"
 import IFriendSpinner from "@/components/ifriend-spinner"
+import { formatRegistrationDate } from "@/lib/utils"
 
 export function ParentDetailsContent({ parentId }: { parentId: string }) {
   const [parent, setParent] = useState<ParentDetailsData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-
-  // Format: 23 March,2024
-  const formatRegistrationDate = (iso: string): string => {
-    const d = new Date(iso)
-    if (Number.isNaN(d.getTime())) return iso
-    const day = d.getDate()
-    const month = d.toLocaleString("en-US", { month: "long" })
-    const year = d.getFullYear()
-    return `${day} ${month},${year}`
-  }
 
   useEffect(() => {
     const fetchParentDetails = async () => {

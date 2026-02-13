@@ -11,15 +11,15 @@ export function TopList() {
   const [topChildren, setTopChildren] = useState<topChild[]>([])
 
   useEffect(() => {
-  (async () => {
-    try {
-      const result = await getTopChildren()
-      const topChildren = result.data
-      setTopChildren(topChildren ?? [])
-    } catch (error) {
-      console.log(error)
-    }
-  })()
+    (async () => {
+      try {
+        const result = await getTopChildren()
+        const topChildren = result.data
+        setTopChildren(topChildren ?? [])
+      } catch (error) {
+        console.log(error)
+      }
+    })()
   }, []);
 
   return (
@@ -71,7 +71,7 @@ export function TopList() {
                       <Image src="/top-three-icon.svg" alt="top-three" width={40} height={40} />
                     </div>
                   )}
-                  { index + 1 > 3 && (
+                  {index + 1 > 3 && (
                     <span>
                       {index + 1}
                     </span>

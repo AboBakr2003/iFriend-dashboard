@@ -12,6 +12,7 @@ import { RoleItemsData } from "@/services/queries/settings/role/GET/get-all-role
 import { toast } from "sonner"
 import ArrowDown2Icon from "@/public/arrow-down-2-icon"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { X } from "lucide-react"
 
 interface EditRoleDialogProps {
   open: boolean
@@ -80,6 +81,13 @@ export function EditRoleDialog({ open, onOpenChange, role, onUpdated }: EditRole
 
   const handleSave = async () => {
     if (!role) return
+
+    // Validate: at least one permission must be selected
+    if (selectedAccess.length === 0) {
+      toast("Please select at least one permission ⚠️")
+      return
+    }
+
     setSubmitting(true)
     try {
       const permissionIds = Array.from(new Set(
@@ -87,15 +95,15 @@ export function EditRoleDialog({ open, onOpenChange, role, onUpdated }: EditRole
       ))
       const res = await updateRole(role.id, { permissionIds })
       if (res.success) {
-        toast(`${res.message} ✅`)
+        toast(`Role permissions updated successfully ✅`)
         onUpdated?.()
         handleClose()
       } else {
-        toast(`${res.message} ❌`)
+        toast(`Failed to update role permissions ❌`)
       }
     } catch (e) {
       console.error(e)
-      toast("Failed to update role ❌")
+      toast("Failed to update role permissions ❌")
     } finally {
       setSubmitting(false)
     }
@@ -116,16 +124,20 @@ export function EditRoleDialog({ open, onOpenChange, role, onUpdated }: EditRole
           isClosing ? "animate-out zoom-out-50" : "animate-in zoom-in-50"
         )}
       >
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 h-6 w-6 rounded-full opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-offset-2 disabled:pointer-events-none"
+          onClick={handleClose}
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </Button>
         <div className="flex flex-col space-y-6">
-          <h2 className="text-xl font-medium">Edit Role Permissions</h2>
+          <h2 className="text-xl font-medium">Edit {roleName} Permissions</h2>
 
           <div className="space-y-2">
-            <Label className="text-base text-natural-text">Role</Label>
-            <div className="px-3 py-2 rounded-lg bg-natural text-natural-text">{roleName}</div>
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-base text-natural-text">Access</Label>
+            <Label>Access</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -142,7 +154,7 @@ export function EditRoleDialog({ open, onOpenChange, role, onUpdated }: EditRole
               <PopoverContent className="w-100 p-4 z-99999" align="start">
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none mb-3">Select Access</h4>
-                  <div className="grid gap-2 max-h-[300px] overflow-y-auto">
+                  <div className={`grid gap-2 ${permissions.length > 9 && "overflow-y-auto"}`}>
                     {permissions.map((permission) => (
                       <div key={permission.id} className="flex items-center space-x-2">
                         <Checkbox
@@ -150,7 +162,7 @@ export function EditRoleDialog({ open, onOpenChange, role, onUpdated }: EditRole
                           checked={selectedAccess.includes(permission.id)}
                           onCheckedChange={() => toggleAccess(permission.id)}
                         />
-                        <Label htmlFor={`perm-${permission.id}`} className="text-sm text-natural-text font-normal cursor-pointer">
+                        <Label htmlFor={`perm-${permission.id}`} className="text-natural-text font-normal cursor-pointer">
                           {permission.name}
                         </Label>
                       </div>
@@ -159,6 +171,11 @@ export function EditRoleDialog({ open, onOpenChange, role, onUpdated }: EditRole
                 </div>
               </PopoverContent>
             </Popover>
+            {selectedAccess.length === 0 && (
+              <p className="text-xs text-red-500 mt-1">
+                At least one permission is required
+              </p>
+            )}
           </div>
 
           <div className="flex items-center gap-4 justify-between mt-2">
