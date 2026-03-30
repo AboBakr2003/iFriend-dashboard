@@ -7,6 +7,7 @@ import { AddDiscountCard } from "./packages/add-discount-card"
 import { EditDiscountCard } from "./packages/edit-discount-card"
 import { AlertWindow } from "@/components/alert-window"
 import DeleteIcon from "@/public/delete-icon"
+import { LoyaltySettingsCards } from "./loyalty-settings-cards"
 
 import { useRouter } from "next/navigation"
 import { useUsersTable } from "./users/use-users-table"
@@ -150,6 +151,7 @@ export function ReferAndEarn() {
 
   return (
     <div className="flex flex-col gap-15">
+      <LoyaltySettingsCards />
       <AllDiscountsTable
         packages={currentPackages}
         onAdd={() => setIsAddOpen(true)}

@@ -94,7 +94,9 @@ export function ParentDetailsContent({ parentId }: { parentId: string }) {
                 </Detail>
 
                 <Detail label="Subscription Status">
-                  {parent.isSubscribed ? "Subscribed" : "Not Subscribed"}
+                  <span className={`px-3 py-1 rounded-full ${parent.isSubscribed ? "text-success bg-success/10" : "text-danger bg-danger/10"}`}>
+                    {parent.isSubscribed ? "Subscribed" : "Not Subscribed"}
+                  </span>
                 </Detail>
 
                 <Detail label="Email">{parent.email}</Detail>

@@ -145,7 +145,9 @@ export function AllUsersTable({
                     <TableCell
                       className={user.subscription === "Subscribed" ? "text-success" : "text-danger"}
                     >
-                      {user.subscription}
+                      <span className={`px-3 py-1 rounded-full ${user.subscription === "Subscribed" ? "text-success bg-success/10" : "text-danger bg-danger/10"}`}>
+                        {user.subscription}
+                      </span>
                     </TableCell>
                     <TableCell>{user.registrationDate}</TableCell>
                     <TableCell className="px-6 py-0 text-right">

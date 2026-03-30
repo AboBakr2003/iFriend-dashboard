@@ -154,7 +154,7 @@ export function AllUsersTable() {
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.kidsCount}</TableCell>
                   <TableCell>
-                    <span className={`text-${user.isSubscribed ? "success" : "danger"}`}>
+                    <span className={`px-3 py-1 rounded-full ${user.isSubscribed ? "text-success bg-success/10" : "text-danger bg-danger/10"}`}>
                       {user.isSubscribed ? "Subscribed" : "Not Subscribed"}
                     </span>
                   </TableCell>

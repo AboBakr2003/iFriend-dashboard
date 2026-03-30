@@ -2,8 +2,6 @@
 
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
-// @ts-ignore
-import { type LegendProps } from "recharts"
 
 import { cn } from "@/lib/utils"
 
@@ -114,12 +112,7 @@ const ChartTooltipContent = React.forwardRef<
     nameKey?: string
     labelKey?: string
     payload?: any[]
-    active?: boolean
-    label?: any
-    labelFormatter?: any
-    labelClassName?: string
-    formatter?: any
-    color?: any
+    label?: string | React.ReactNode
   }
 >(
   (
@@ -271,11 +264,11 @@ const ChartLegend = RechartsPrimitive.Legend
 
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<"div"> & {
+  React.ComponentProps<"div"> &
+  Pick<RechartsPrimitive.LegendProps, "verticalAlign"> & {
     hideIcon?: boolean
     nameKey?: string
     payload?: any[]
-    verticalAlign?: any
   }
 >(
   (

@@ -155,10 +155,7 @@ export function TicketsTable({ tickets, header, onDeleteSuccess }: TicketsTableP
                   return (
                     <TableRow
                       key={ticket.id}
-                      className={cn(
-                        "hover:bg-light-natural/50 transition-colors",
-                        ticket.status === "OPEN" && "bg-primary-blue/5 hover:bg-primary-blue/5"
-                      )}
+                      className="hover:bg-light-natural/50 transition-colors"
                     >
                       <TableCell className="text-center">
                         #{ticket.ticketNumber}
