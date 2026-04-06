@@ -36,7 +36,7 @@ export function RoleTableSearch({
           onClick={onBulkDelete}
         >
           <DeleteIcon className="h-5! w-5!" />
-          <span className="hidden sm:inline">Delete Selected</span>
+          Delete Selected ({selectedCount})
         </Button>
       )}
     </div>

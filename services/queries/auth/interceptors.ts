@@ -30,7 +30,7 @@ api.interceptors.response.use(
           }
         }
       }
-    } catch {}
+    } catch { }
     return response;
   },
   async (error) => {
@@ -42,7 +42,7 @@ api.interceptors.response.use(
     if (!resp) {
       return Promise.reject(error);
     }
-    
+
     if (resp?.status === 401 && !originalRequest._retry && typeof window !== "undefined") {
       const rememberMe = localStorage.getItem("rememberMe") === "true";
       const storedRefreshToken = localStorage.getItem("refreshToken");
@@ -67,13 +67,13 @@ api.interceptors.response.use(
           const newAccessToken: string | undefined = res?.data?.data?.accessToken;
           const newRefreshToken: string | undefined = res?.data?.data?.refreshToken;
           if (newRefreshToken) {
-            try { localStorage.setItem("refreshToken", newRefreshToken); } catch {}
+            try { localStorage.setItem("refreshToken", newRefreshToken); } catch { }
           }
           if (newAccessToken) {
-            try { localStorage.setItem("accessToken", newAccessToken); } catch {}
+            try { localStorage.setItem("accessToken", newAccessToken); } catch { }
             api.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
             // keep middleware cookie in sync with refreshed token (7 days)
-            try { document.cookie = `accessToken=${newAccessToken}; path=/; max-age=${60 * 60 * 24 * 7}`; } catch {}
+            try { document.cookie = `accessToken=${newAccessToken}; path=/; max-age=${60 * 60 * 24 * 7}`; } catch { }
             onRefreshed(newAccessToken);
             if (originalRequest.headers) {
               originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
@@ -92,8 +92,8 @@ api.interceptors.response.use(
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("rememberMe");
         // also clear cookie so middleware won't think user is authenticated
-        try { document.cookie = 'accessToken=; path=/; max-age=0'; } catch {}
-      } catch {}
+        try { document.cookie = 'accessToken=; path=/; max-age=0'; } catch { }
+      } catch { }
       if (typeof window !== "undefined") {
         const currentPath = window.location.pathname;
         if (currentPath !== "/sign-in") {
@@ -106,4 +106,4 @@ api.interceptors.response.use(
   }
 );
 
-export {};
+export { };

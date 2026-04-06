@@ -57,7 +57,7 @@ export function AllKidsTable({ kids }: { kids: ParentChildrenData[] }) {
         </CardHeader>
         <CardContent className="p-0">
           <Table>
-            <TableHeader className="bg-natural border-none">
+            <TableHeader className="bg-natural border-none text-nowrap">
               <TableRow>
                 <TableHead className="w-[50px] text-center font-bold">
                   #
@@ -78,11 +78,18 @@ export function AllKidsTable({ kids }: { kids: ParentChildrenData[] }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentKids.map((kid, index) => (
-                <TableRow key={index + 1}>
-                  <TableCell className="text-center font-medium">
-                    {index + 1}
+              {kids.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-10 text-natural-text">
+                    No kids found
                   </TableCell>
+                </TableRow>
+              ) : (
+                currentKids.map((kid, index) => (
+                  <TableRow key={index + 1} className="text-nowrap">
+                    <TableCell className="text-center font-medium">
+                      {index + 1}
+                    </TableCell>
                   <TableCell>{kid.name}</TableCell>
                   <TableCell>{kid.reportsCount}</TableCell>
                   <TableCell className="text-right py-0">
@@ -99,7 +106,7 @@ export function AllKidsTable({ kids }: { kids: ParentChildrenData[] }) {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              )))}
             </TableBody>
           </Table>
         </CardContent>

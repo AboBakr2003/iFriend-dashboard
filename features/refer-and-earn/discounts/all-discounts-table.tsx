@@ -144,11 +144,18 @@ export function AllDiscountsTable({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {packages.map((pkg) => (
-                <TableRow key={pkg.id} className="text-nowrap border-b border-natural last:border-0 hover:bg-light-natural/50 transition-colors">
-                  <TableCell className="p-4 text-center">
-                    <Checkbox
-                      className="border-natural-text/30"
+              {packages.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-10 text-natural-text">
+                    No discounts found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                packages.map((pkg) => (
+                  <TableRow key={pkg.id} className="text-nowrap border-b border-natural last:border-0 hover:bg-light-natural/50 transition-colors">
+                    <TableCell className="p-4 text-center">
+                      <Checkbox
+                        className="border-natural-text/30"
                       checked={selectedIds.has(pkg.id)}
                       onCheckedChange={(checked) => toggleOne(pkg.id, Boolean(checked))}
                     />
@@ -185,7 +192,7 @@ export function AllDiscountsTable({
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              )))}
             </TableBody>
           </Table>
         </CardContent>

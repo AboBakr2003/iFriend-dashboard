@@ -144,20 +144,20 @@ export function NotificationsTable({
                 </TableCell>
                 <TableCell className="max-w-[220px]">
                   <div className={cn(
-                    "w-full overflow-hidden transition-all duration-500 ease-in-out max-h-6 group-hover:max-h-40 cursor-default",
+                    "w-full overflow-hidden transition-all duration-500 ease-in-out max-h-6 group-hover:max-h-[500px] cursor-default",
                     isCanceled && "opacity-50 grayscale-[0.8]"
                   )}>
-                    <p className="whitespace-normal leading-6">
+                    <p className="whitespace-normal leading-6 break-words max-h-40">
                       {notification.title}
                     </p>
                   </div>
                 </TableCell>
-                <TableCell className="max-w-md transition-all duration-300">
+                <TableCell className="max-w-md">
                   <div className={cn(
-                    "w-full overflow-hidden transition-all duration-500 ease-in-out max-h-6 group-hover:max-h-40 cursor-default group-hover:overflow-y-auto",
+                    "w-full overflow-hidden transition-all duration-500 ease-in-out max-h-6 group-hover:max-h-[500px] cursor-default group-hover:overflow-y-auto",
                     isCanceled && "opacity-50 grayscale-[0.8]"
                   )}>
-                    <p className="leading-6">
+                    <p className="whitespace-normal leading-6 break-words max-h-40">
                       {notification.message}
                     </p>
                   </div>

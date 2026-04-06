@@ -11,6 +11,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import EditIcon from "@/public/edit-icon"
+import DeleteIcon from "@/public/delete-icon"
 import { SubscriptionPackage } from "@/services/queries/subscription/get/get-all-packages"
 import { cn } from "@/lib/utils"
 
@@ -31,11 +32,11 @@ export function PackageCard({ pkg, onDeletePlan, onEdit, onDelete }: PackageCard
   }
 
   return (
-    <Card className="overflow-hidden border-none shadow-[0_4px_20px_0_rgba(0,0,0,0.05)]">
+    <Card className="overflow-hidden border">
       <div className="flex items-center justify-between p-6">
         {/* Left: package name + max children — dimmed when inactive */}
         <div className={cn("flex items-center gap-2 transition-all duration-300", !pkg.isActive && "opacity-50 grayscale select-none")}>
-          <h3 className="text-xl font-semibold rounded-full px-4 py-1 flex items-center gap-2 text-natural-text bg-natural-text/10 shrink-0">
+          <h3 className="text-xl font-semibold rounded-full px-4 py-1 flex items-center gap-2 bg-natural-text/10 shrink-0">
             {pkg.name}
             {/* Status dot — dimmed when inactive */}
             <div
@@ -51,11 +52,17 @@ export function PackageCard({ pkg, onDeletePlan, onEdit, onDelete }: PackageCard
             <span className="text-black">{pkg.maxChildren}</span>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           {/* Edit button — always full style regardless of package status */}
           <Button onClick={onEdit} variant="ghost" className="text-primary-blue hover:text-primary-blue hover:bg-primary-blue/10 transition-colors p-2 sm:px-4 sm:py-2">
             <EditIcon className="w-5! h-5!" />
             <span className="hidden sm:block">Edit</span>
+          </Button>
+
+          {/* Delete button — always full style regardless of package status */}
+          <Button onClick={onDelete} variant="ghost" className="text-danger hover:text-danger hover:bg-danger/10 transition-colors p-2 sm:px-4 sm:py-2">
+            <DeleteIcon className="w-5! h-5!" />
+            <span className="hidden sm:block">Delete</span>
           </Button>
         </div>
       </div>

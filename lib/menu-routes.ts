@@ -64,6 +64,11 @@ export const MENU_ROUTES: MenuRoute[] = [
     requiredPermissions: [PERMISSIONS.LOYALTY],
   },
   {
+    name: "App Configuration",
+    href: "/app-config",
+    requiredPermissions: [PERMISSIONS.SETTINGS],
+  },
+  {
     name: "Settings",
     href: "/settings",
     requiredPermissions: [PERMISSIONS.SETTINGS],

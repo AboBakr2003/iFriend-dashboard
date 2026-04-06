@@ -11,6 +11,10 @@ import { PackagesFilter } from "./components/packages-filter"
 import { PackageCard } from "./components/package-card"
 import { getAllPackages, SubscriptionPackage } from "@/services/queries/subscription/get/get-all-packages"
 
+import { deletePackage } from "@/services/queries/subscription/delete/delete-package"
+import { toast } from "sonner"
+import { Card } from "@/components/ui/card"
+
 export default function SubscriptionContent() {
   const [packages, setPackages] = React.useState<SubscriptionPackage[]>([])
   const [loading, setLoading] = React.useState(true)
@@ -39,7 +43,15 @@ export default function SubscriptionContent() {
   )
 
   const handleDelete = async () => {
-    // Add delete API call logic here if needed
+    if (!deleteId) return
+
+    const res = await deletePackage(deleteId)
+    if (res.success) {
+      toast(res.message + " ✅")
+      load()
+    } else {
+      toast(res.message + " ❌")
+    }
     setDeleteId(null)
   }
 
@@ -62,9 +74,9 @@ export default function SubscriptionContent() {
 
       {/* Content */}
       {loading ? (
-        <div className="py-20 text-center text-natural-text">Loading packages...</div>
+        <div className="text-center py-10 text-natural-text">Loading packages...</div>
       ) : filtered.length === 0 ? (
-        <div className="py-20 text-center text-natural-text">No packages found</div>
+        <Card className="bg-white text-center py-10 text-natural-text">No packages found</Card>
       ) : (
         <div className="flex flex-col gap-8">
           {filtered.map((pkg) => (
@@ -98,7 +110,7 @@ export default function SubscriptionContent() {
       <AlertWindow
         open={deleteId !== null}
         onOpenChange={(open) => !open && setDeleteId(null)}
-        title="Delete Subscription Plan"
+        title={`Delete ${packages?.find((p) => p.id === deleteId)?.name} Package`}
         description="Are you sure you would like to do this?"
         icon={<DeleteIcon className="h-10! w-10!" />}
         variant="destructive"

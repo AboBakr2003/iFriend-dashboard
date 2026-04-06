@@ -1,7 +1,7 @@
 "use client"
 
-import { RolesTable } from "./components/roles/roles-table/roles-table"
-import { UserAccessTable } from "./components/users-access/users-access-table/users-access-table"
+import { RolesTable } from "./roles/roles-table/roles-table"
+import { UserAccessTable } from "./users-access/users-access-table/users-access-table"
 
 export default function SettingsContent() {
   return (

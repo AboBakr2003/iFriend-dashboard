@@ -9,6 +9,7 @@ import UsersIcon from "@/public/users-icon";
 import NotificationsIcon from "@/public/notifications-icon";
 import HeadPhoneIcon from "@/public/head-phone-icon";
 import FeedBackIcon from "@/public/feed-back-icon";
+import AppConfigIcon from "@/public/config-icon";
 import { GiftIcon } from "@/public/gift-icon";
 import Image from "next/image";
 import Link from "next/link";
@@ -35,6 +36,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "/help-and-support": HeadPhoneIcon,
   "/feedback": FeedBackIcon,
   "/refer-and-earn": GiftIcon,
+  "/app-config": AppConfigIcon,
   "/settings": SettingsIcon,
 };
 
@@ -81,7 +83,7 @@ export default function Sidebar() {
             const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(`${item.href}/`));
 
             return (
-              <li key={item.name} className="my-1">
+              <li key={item.name} className="my-1 text-nowrap">
                 <Link
                   href={item.href}
                   className={`

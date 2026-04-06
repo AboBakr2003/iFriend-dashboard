@@ -1,13 +1,13 @@
 "use client"
 
 import * as React from "react"
-import { AllDiscountsTable } from "./packages/all-discounts-table"
+import { AllDiscountsTable } from "./discounts/all-discounts-table"
 import { AllUsersTable } from "./users/all-users-table"
-import { AddDiscountCard } from "./packages/add-discount-card"
-import { EditDiscountCard } from "./packages/edit-discount-card"
+import { AddDiscountCard } from "./discounts/add-discount-card"
+import { EditDiscountCard } from "./discounts/edit-discount-card"
 import { AlertWindow } from "@/components/alert-window"
 import DeleteIcon from "@/public/delete-icon"
-import { LoyaltySettingsCards } from "./loyalty-settings-cards"
+import { LoyaltySettingsCards } from "./loyality-settings/loyalty-settings-cards"
 
 import { useRouter } from "next/navigation"
 import { useUsersTable } from "./users/use-users-table"

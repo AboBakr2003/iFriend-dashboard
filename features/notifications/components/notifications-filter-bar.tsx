@@ -91,6 +91,28 @@ export function NotificationsFilterBar({
         </PopoverTrigger>
         <PopoverContent className="w-64 p-4 z-99999" align="start">
           <div className="flex flex-col gap-6">
+            {/* Status Section */}
+            <div className="flex flex-col gap-3">
+              <span className="text-sm font-semibold">Status</span>
+              <div className="flex flex-col gap-2">
+                {STATUS_OPTIONS.map((option) => (
+                  <div key={option} className="flex items-center gap-2">
+                    <Checkbox
+                      id={`stat-${option}`}
+                      checked={statusFilters.includes(option.toUpperCase())}
+                      onCheckedChange={() => toggleStatus(option)}
+                    />
+                    <Label
+                      htmlFor={`stat-${option}`}
+                      className="text-sm font-normal text-natural-text capitalize cursor-pointer"
+                    >
+                      {option}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
             {/* Target Section */}
             <div className="flex flex-col gap-3">
               <span className="text-sm font-semibold">Target</span>
@@ -113,27 +135,6 @@ export function NotificationsFilterBar({
               </div>
             </div>
 
-            {/* Status Section */}
-            <div className="flex flex-col gap-3">
-              <span className="text-sm font-semibold">Status</span>
-              <div className="flex flex-col gap-2">
-                {STATUS_OPTIONS.map((option) => (
-                  <div key={option} className="flex items-center gap-2">
-                    <Checkbox
-                      id={`stat-${option}`}
-                      checked={statusFilters.includes(option.toUpperCase())}
-                      onCheckedChange={() => toggleStatus(option)}
-                    />
-                    <Label
-                      htmlFor={`stat-${option}`}
-                      className="text-sm font-normal text-natural-text capitalize cursor-pointer"
-                    >
-                      {option}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Footer / Reset */}
             <div className="flex items-center">

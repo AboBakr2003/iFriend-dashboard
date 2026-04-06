@@ -145,7 +145,7 @@ export function TicketsTable({ tickets, header, onDeleteSuccess }: TicketsTableP
             <TableBody>
               {currentTickets.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-6 text-natural-text">
+                  <TableCell colSpan={7} className="text-center py-10 text-natural-text">
                     No tickets found
                   </TableCell>
                 </TableRow>
@@ -164,10 +164,10 @@ export function TicketsTable({ tickets, header, onDeleteSuccess }: TicketsTableP
                         {ticket.parent.firstName} {ticket.parent.lastName}
                       </TableCell>
                       <TableCell className="whitespace-nowrap">
-                        {ticket.title}
+                        <div className="max-w-50 text-ellipsis overflow-hidden">{ticket.title}</div>
                       </TableCell>
                       <TableCell className="max-w-xs" title={ticket.description}>
-                        <p className="line-clamp-2 leading-5">
+                        <p className="line-clamp-2 leading-5 text-ellipsis">
                           {ticket.description}
                         </p>
                       </TableCell>

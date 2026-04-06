@@ -10,30 +10,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import ArrowDownIcon from "@/public/arrow-down-icon";
-import DownloadIcon from "@/public/download-icon";
+import { AllReportsTable } from "./components/all-reports-table";
 import type { KidDetailsData } from "@/services/queries/users-management/get/get-kid-details";
 import { useEffect, useState } from "react";
 import { getKidDetails } from "@/services/queries/users-management/get/get-kid-details";
 import IFriendSpinner from "@/components/ifriend-spinner";
+import { Detail } from "@/components/detail";
 
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return dateStr;
-  return date.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).replace(/ (\d{4})$/, ", $1");
-};
 
 export function KidDetailsContent({ kidId }: { kidId: string }) {
   const [kid, setKid] = useState<KidDetailsData | null>(null);
@@ -114,79 +97,22 @@ export function KidDetailsContent({ kidId }: { kidId: string }) {
               <CardTitle className="text-black text-lg font-medium">Profile details</CardTitle>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
-                <div className="grid grid-cols-3 gap-4 items-center">
-                  <span className="text-sm text-gray-500 font-medium">First name</span>
-                  <span className="text-sm font-medium col-span-2">{kid?.firstName}</span>
-                </div>
-                <div className="grid grid-cols-3 gap-4 items-center">
-                  <span className="flex items-center gap-1 text-sm text-gray-500 font-medium">Age</span>
-                  <span className="col-span-2">
+              <div className="grid">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+                  <Detail label="First Name" content={kid?.firstName} />
+                  <Detail label="Age" content={
                     <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-xs font-medium">
                       {kid?.age}
                     </span>
-                  </span>
-                </div>
-                <div className="grid grid-cols-3 gap-4 items-center">
-                  <span className="text-sm text-gray-500 font-medium">Last name</span>
-                  <span className="text-sm font-medium col-span-2">{kid?.lastName}</span>
+                  } />
+                  <Detail label="Last Name" content={kid?.lastName} />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Child Report Card */}
-          <Card className="rounded-xl border shadow-sm">
-            <CardHeader className="border-b p-4">
-              <CardTitle className="text-black text-lg font-medium">Child Report</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader className="bg-natural border-none">
-                  <TableRow>
-                    <TableHead className="w-[50px] text-center font-bold">#</TableHead>
-                    <TableHead>
-                      <div className="flex items-center gap-1">
-                        Name
-                        <ArrowDownIcon className="h-4 w-4" />
-                      </div>
-                    </TableHead>
-                    <TableHead>
-                      <div className="flex items-center gap-1">
-                        File name
-                        <ArrowDownIcon className="h-4 w-4" />
-                      </div>
-                    </TableHead>
-                    <TableHead>
-                      <div className="flex items-center gap-1">
-                        Date
-                        <ArrowDownIcon className="h-4 w-4" />
-                      </div>
-                    </TableHead>
-                    <TableHead className="text-right pr-6" />
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {kid?.reports.map((report, index) => (
-                    <TableRow key={report.id ?? index}>
-                      <TableCell className="text-center font-medium">{index + 1}</TableCell>
-                      <TableCell>{report.name}</TableCell>
-                      <TableCell className="text-natural-text text-sm">{report.fileName}</TableCell>
-                      <TableCell className="text-natural-text text-sm">{formatDate(report.date)}</TableCell>
-                      <TableCell className="text-right py-0">
-                        <div className="flex items-center justify-end pr-8">
-                          <Button variant="ghost" className="h-auto text-primary-blue hover:text-primary-blue hover:bg-primary-blue/10 gap-1">
-                            <DownloadIcon className="h-5! w-5!" />
-                            Download
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          {/* Child Report Table */}
+          <AllReportsTable reports={kid.reports} />
         </>
       )}
     </div>

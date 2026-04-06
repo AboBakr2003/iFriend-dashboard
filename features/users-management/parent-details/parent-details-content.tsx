@@ -7,6 +7,7 @@ import { getParentDetails } from "@/services/queries/users-management/get/get-pa
 import type { ParentDetailsData } from "@/services/queries/users-management/get/get-parent-details"
 import IFriendSpinner from "@/components/ifriend-spinner"
 import { formatRegistrationDate } from "@/lib/utils"
+import { Detail } from "@/components/detail"
 
 export function ParentDetailsContent({ parentId }: { parentId: string }) {
   const [parent, setParent] = useState<ParentDetailsData | null>(null);
@@ -87,20 +88,18 @@ export function ParentDetailsContent({ parentId }: { parentId: string }) {
 
             <CardContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
-                <Detail label="First Name">{parent.firstName}</Detail>
-                <Detail label="Last Name">{parent.lastName}</Detail>
-                <Detail label="Registration Date">
-                  {formatRegistrationDate(parent.registrationDate)}
-                </Detail>
+                <Detail label="First Name" content={parent.firstName} />
+                <Detail label="Last Name" content={parent.lastName} />
+                <Detail label="Registration Date" content={formatRegistrationDate(parent.registrationDate)} />
 
-                <Detail label="Subscription Status">
+                <Detail label="Subscription Status" content={
                   <span className={`px-3 py-1 rounded-full ${parent.isSubscribed ? "text-success bg-success/10" : "text-danger bg-danger/10"}`}>
                     {parent.isSubscribed ? "Subscribed" : "Not Subscribed"}
                   </span>
-                </Detail>
+                } />
 
-                <Detail label="Email">{parent.email}</Detail>
-                <Detail label="Phone">{parent.phone}</Detail>
+                <Detail label="Email" content={parent.email} />
+                <Detail label="Phone" content={parent.phone} />
               </div>
             </CardContent>
           </Card>
@@ -109,21 +108,6 @@ export function ParentDetailsContent({ parentId }: { parentId: string }) {
           <AllKidsTable kids={parent.children ?? []} />
         </>
       )}
-    </div>
-  );
-}
-
-function Detail({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="grid grid-cols-3 gap-4">
-      <span className="text-sm text-natural-text font-medium">{label}</span>
-      <span className="text-sm font-semibold col-span-2">{children}</span>
     </div>
   );
 }

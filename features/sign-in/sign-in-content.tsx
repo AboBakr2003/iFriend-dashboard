@@ -62,7 +62,7 @@ export default function SignInContent() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col lg:flex-row">
+    <div className="flex justify-center md:justify-start min-h-screen w-full bg-[linear-gradient(180deg,#9CC3FE,#0066FF,#030712)] md:bg-none md:bg-white">
       {loading && (
         <div className="fixed inset-0 z-999 bg-black/40 backdrop-blur-sm flex items-center justify-center">
           <IFriendSpinner
@@ -73,10 +73,10 @@ export default function SignInContent() {
         </div>
       )}
       {/* Left Side - Form */}
-      <div className="flex w-full flex-col justify-center px-8 py-12 lg:w-1/2 lg:px-24">
+      <div className="flex w-full sm:w-3/4 md:w-1/2 flex-col justify-center px-5 py-12 sm:px-4 lg:px-8 xl:px-24">
         <div className="mb-8 select-none">
-          <h2 className="text-xl font-medium text-gray-500">Welcome back</h2>
-          <h1 className="mt-2 text-3xl font-medium text-black">
+          <h2 className="text-xl font-medium text-white md:text-natural-text">Welcome back</h2>
+          <h1 className="text-3xl font-medium tracking-tight text-white md:text-black">
             Sign in to Dashboard !
           </h1>
         </div>
@@ -86,7 +86,7 @@ export default function SignInContent() {
           onSubmit={(e) => e.preventDefault()}
         >
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-base text-black select-none">
+            <Label htmlFor="email" className="text-base text-white md:text-black select-none">
               Email address <span className="text-red-500">*</span>
             </Label>
             <div className="relative">
@@ -99,7 +99,7 @@ export default function SignInContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="info@example.com"
-                className="h-12 border-gray-100 bg-natural pl-10 placeholder:text-natural-text focus:ring-2 focus:ring-primary-blue focus:ring-offset-1 transition-all"
+                className="h-12 border-gray-100 bg-natural pl-10 placeholder:text-natural-text focus:ring-2 focus:ring-white md:focus:ring-primary-blue focus:ring-offset-1 transition-all"
               />
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function SignInContent() {
           <div className="space-y-2">
             <Label
               htmlFor="password"
-              className="text-base  text-black select-none"
+              className="text-base text-white md:text-black select-none"
             >
               Password <span className="text-red-500">*</span>
             </Label>
@@ -121,7 +121,7 @@ export default function SignInContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="h-12 border-gray-100 bg-natural px-10 placeholder:text-natural-text focus:ring-2 focus:ring-primary-blue focus:ring-offset-1 transition-all"
+                className="h-12 border-gray-100 bg-natural px-10 placeholder:text-natural-text focus:ring-2 focus:ring-white md:focus:ring-primary-blue focus:ring-offset-1 transition-all"
               />
               <button
                 type="button"
@@ -141,6 +141,7 @@ export default function SignInContent() {
             <Checkbox
               id="remember"
               checked={rememberMe}
+              className="bg-white"
               onCheckedChange={(checked) => {
                 const next = checked === true;
                 setRememberMe(next);
@@ -152,7 +153,7 @@ export default function SignInContent() {
                 } catch { }
               }}
             />
-            <Label htmlFor="remember" className="text-base cursor-pointer">
+            <Label htmlFor="remember" className="text-base cursor-pointer text-white md:text-black">
               Remember me
             </Label>
           </div>
@@ -168,7 +169,7 @@ export default function SignInContent() {
       </div>
 
       {/* Right Side - Image */}
-      <div className="hidden w-1/2 m-3 rounded-3xl items-center justify-center bg-[linear-gradient(180deg,#9CC3FE,#0066FF,#030712)] p-12 lg:flex">
+      <div className="hidden md:flex w-1/2 m-3 rounded-3xl items-center justify-center bg-[linear-gradient(180deg,#9CC3FE,#0066FF,#030712)] p-6 lg:p-12">
         <div className="relative h-full w-full max-w-2xl">
           <div className="absolute inset-0 flex items-center justify-center">
             <Image

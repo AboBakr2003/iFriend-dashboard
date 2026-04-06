@@ -382,7 +382,7 @@ export function EditTemplateCard({ open, templateId, onOpenChange, onUpdated }: 
               onClick={handleUpdate}
               disabled={submitting || loading}
             >
-              {submitting ? "Saving..." : "Save Changes"}
+              {submitting ? "Updating..." : "Update"}
             </Button>
             <Button
               variant="ghost"

@@ -81,7 +81,7 @@ export function AlertWindow({
         {(title || description) && (
           <AlertDialogHeader className="flex flex-col items-center space-y-2">
             {title && (
-              <AlertDialogTitle className="text-xl font-bold text-center">
+              <AlertDialogTitle className="text-xl font-bold text-center break-words">
                 {title}
               </AlertDialogTitle>
             )}
